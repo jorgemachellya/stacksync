@@ -22,7 +22,15 @@ export function loadManifest(filePath?: string): Manifest {
     );
   }
 
-  const rawContent = fs.readFileSync(resolvedPath, 'utf-8');
+  let rawContent: string;
+  try {
+    rawContent = fs.readFileSync(resolvedPath, 'utf-8');
+  } catch (err) {
+    throw new ManifestParseError(
+      `Failed to read manifest file: ${(err as Error).message}`,
+      resolvedPath
+    );
+  }
 
   let parsed: unknown;
   try {
